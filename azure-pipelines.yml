@@ -5,15 +5,44 @@
 
 trigger:
 - master
+- feature/*
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
+variables:
+  buildConfiguration: 'Release'
+  GitVersion.SemVer: ''
+  
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+- task: UseGitVersion@5
+  displayName: GitVersion
+  inputs:
+    versionSpec: '5.x'
+    updateAssemblyInfo: false
+  
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: 'build'
+    projects: '**/DemoPackage.csproj'
+    configuration: '$(buildConfiguration)'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'GitVersion.SemVer'
+
+- task: DotNetCoreCLI@2
+  displayName: "dotnet pack"
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/DemoPackage.csproj'
+    nobuild: true
+    packDirectory: '$(Build.ArtifactStagingDirectory)'
+    versioningScheme: byEnvVar
+    versionEnvVar: 'GitVersion.SemVer'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'push'
+    searchPatternPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    feedPublish: 'DemoFeed'
