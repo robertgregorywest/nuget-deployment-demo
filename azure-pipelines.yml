@@ -22,6 +22,20 @@ steps:
     versionSpec: '5.x'
     updateAssemblyInfo: false
   
+- task: Assembly-Info-NetCore@2
+  displayName: 'Set Assembly Info'
+  inputs:
+    Path: "$(Build.SourcesDirectory)"
+    FileNames: '**/DemoPackage.csproj'
+    InsertAttributes: true
+    FileEncoding: "auto"
+    WriteBOM: false
+    LogLevel: "verbose"
+    FailOnWarning: false
+    VersionNumber: '$(GitVersion.AssemblySemVer)'
+    FileVersionNumber: '$(GitVersion.AssemblySemVer)'
+    InformationalVersion: '$(GitVersion.InformationalVersion)'
+    
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
