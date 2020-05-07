@@ -20,21 +20,9 @@ steps:
   displayName: GitVersion
   inputs:
     versionSpec: '5.x'
-    updateAssemblyInfo: false
-  
-- task: Assembly-Info-NetCore@2
-  displayName: 'Set Assembly Info'
-  inputs:
-    Path: "$(Build.SourcesDirectory)"
-    FileNames: '**/DemoPackage.csproj'
-    InsertAttributes: true
-    FileEncoding: "auto"
-    WriteBOM: false
-    LogLevel: "verbose"
-    FailOnWarning: false
-    VersionNumber: '$(GitVersion.AssemblySemVer)'
-    FileVersionNumber: '$(GitVersion.AssemblySemVer)'
-    InformationalVersion: '$(GitVersion.InformationalVersion)'
+    updateAssemblyInfo: true
+    ensureassemblyinfo: true
+    updateAssemblyInfoFilename: '$(Build.SourcesDirectory)/DemoPackage/AssemblyInfo.cs'
     
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
@@ -53,6 +41,7 @@ steps:
     versionEnvVar: 'GitVersion.SemVer'
 
 - task: DotNetCoreCLI@2
+  displayName: 'dotnet push'
   inputs:
     command: 'push'
     searchPatternPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
