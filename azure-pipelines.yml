@@ -21,7 +21,7 @@ steps:
   inputs:
     versionSpec: '5.x'
     updateAssemblyInfo: true
-    ensureassemblyinfo: true
+    ensureAssemblyInfo: true
     updateAssemblyInfoFilename: '$(Build.SourcesDirectory)/DemoPackage/AssemblyInfo.cs'
     
 - task: DotNetCoreCLI@2
