@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <PackageId>DemoPackage</PackageId>
+        <Authors>Rob West</Authors>
+        <Product>DemoPackage</Product>
+        <Description>A demo package to illustrate deploying with Azure DevOps</Description>
+        <PackageProjectUrl>https://github.com/robertgregorywest/NuGetDeploymentDemo</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/robertgregorywest/NuGetDeploymentDemo</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <RootNamespace>DemoPackage</RootNamespace>
+    </PropertyGroup>
+
+</Project>
