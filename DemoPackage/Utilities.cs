@@ -6,7 +6,7 @@ namespace DemoPackage
     {
         public static string GetAssemblyVersion()
         {
-            return Assembly.GetEntryAssembly()?.GetName().Version?.ToString();
+            return Assembly.GetAssembly(typeof(Utilities))?.GetName().Version?.ToString();
         }
     }
 }
