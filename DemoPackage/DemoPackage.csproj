@@ -4,12 +4,15 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>DemoPackage</PackageId>
         <Authors>Rob West</Authors>
-        <Product>DemoPackage</Product>
+        <Product>DemoPackage Product</Product>
+        <Company>Rob West Incorporated</Company>
         <Description>A demo package to illustrate deploying with Azure DevOps</Description>
         <PackageProjectUrl>https://github.com/robertgregorywest/NuGetDeploymentDemo</PackageProjectUrl>
         <RepositoryUrl>https://github.com/robertgregorywest/NuGetDeploymentDemo</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <RootNamespace>DemoPackage</RootNamespace>
+        <Copyright>Copyright Rob West</Copyright>
+        <Title>DemoPackage Title</Title>
     </PropertyGroup>
 
 </Project>
