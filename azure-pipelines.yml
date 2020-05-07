@@ -25,11 +25,8 @@ steps:
 - task: DotNetCoreCLI@2
   displayName: 'dotnet build'
   inputs:
-    command: 'build'
     projects: '**/DemoPackage.csproj'
-    configuration: '$(buildConfiguration)'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'GitVersion.SemVer'
+    arguments: '-p:Version=$(GitVersion.AssemblySemVer) --configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   displayName: "dotnet pack"
