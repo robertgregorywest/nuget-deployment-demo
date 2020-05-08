@@ -13,34 +13,48 @@ pool:
 variables:
   buildConfiguration: 'Release'
   GitVersion.NuGetVersion: ''
+
+jobs:
+- job: package
+  displayName: Build, pack and push
+  continueOnError: false
+  steps:
   
-steps:
+  - task: UseGitVersion@5
+    displayName: GitVersion
+    inputs:
+      versionSpec: '5.x'
+      
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build'
+    inputs:
+      projects: '**/DemoPackage.csproj'
+      arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.NuGetVersion)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: "dotnet pack"
+    inputs:
+      command: 'pack'
+      packagesToPack: '**/DemoPackage.csproj'
+      nobuild: true
+      packDirectory: '$(Build.ArtifactStagingDirectory)'
+      versioningScheme: byEnvVar
+      versionEnvVar: 'GitVersion.NuGetVersion'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet push'
+    inputs:
+      command: 'push'
+      searchPatternPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+      nuGetFeedType: 'internal'
+      publishVstsFeed: 'b528a695-cf88-4a2d-8582-3e4b4d9349e9/92c6582b-29cc-4815-b496-6c811663f5e5'
+      
+- job: tag
+  displayName: Tag if commit is on master branch
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
+  steps:
 
-- task: UseGitVersion@5
-  displayName: GitVersion
-  inputs:
-    versionSpec: '5.x'
-    
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet build'
-  inputs:
-    projects: '**/DemoPackage.csproj'
-    arguments: '--configuration $(buildConfiguration) -p:Version=$(GitVersion.NuGetVersion)'
-
-- task: DotNetCoreCLI@2
-  displayName: "dotnet pack"
-  inputs:
-    command: 'pack'
-    packagesToPack: '**/DemoPackage.csproj'
-    nobuild: true
-    packDirectory: '$(Build.ArtifactStagingDirectory)'
-    versioningScheme: byEnvVar
-    versionEnvVar: 'GitVersion.NuGetVersion'
-
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet push'
-  inputs:
-    command: 'push'
-    searchPatternPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: 'b528a695-cf88-4a2d-8582-3e4b4d9349e9/92c6582b-29cc-4815-b496-6c811663f5e5'
+  - task: git-tag-on-release-task@9
+    displayName: "Add Tag to git"
+    inputs:
+      staticTagName: "$(GitVersion.NuGetVersion)"
