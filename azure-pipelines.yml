@@ -50,6 +50,7 @@ jobs:
       publishVstsFeed: 'b528a695-cf88-4a2d-8582-3e4b4d9349e9/92c6582b-29cc-4815-b496-6c811663f5e5'
       
 - job: tag
+  dependsOn: package
   displayName: Tag if commit is on master branch
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
   steps:
