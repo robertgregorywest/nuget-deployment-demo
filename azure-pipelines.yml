@@ -55,7 +55,10 @@ jobs:
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master')) 
   steps:
 
-  - task: git-tag-on-release-task@9
-    displayName: "Add Tag to git"
+  - task: GitTag@5
+    displayName: 'Add tag to git'
     inputs:
-      staticTagName: "$(GitVersion.NuGetVersion)"
+      workingdir: '$(SYSTEM.DEFAULTWORKINGDIRECTORY)'
+      tagUser: 'robertgregorywest'
+      tagEmail: 'robertgregorywest@gmail.com'
+      tag: '$(GitVersion.NuGetVersion)'
