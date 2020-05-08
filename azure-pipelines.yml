@@ -12,7 +12,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  GitVersion.SemVer: ''
+  GitVersion.NuGetVersion: ''
   
 steps:
 
